@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="lunch.css" type="text/css" />
+
+        <title>Lunch!</title>
+
+        <script type="text/javascript" src="http://api.maps.nokia.com/2.0.0/jsl.js" charset="utf-8"></script>
+
+        <script type='text/javascript' src='jquery-1.5.2.min.js'></script>
+        <!-- jquery template library -->
+        <script type='text/javascript' src='jquery-tmpl.js'></script>
+        <!-- This contains javascript functions for our application-->
+        <script type='text/javascript' src='app.js'></script>
+        <script type="text/javascript">
+          $(document).ready(function(){
+            lunch.setupGeocoder();
+            $('#searchagain').click( function() { lunch.geocode(); });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(lunch.gotLocationFromBrowser);
+                lunch.search();
+            }
+          });
+        </script>
+
+        <a id="taxiplug" href="http://bengreen.org.uk/taxi/">Once you make your
+            selection, you can call a taxi</a>
+
+        <!-- This is a jquery template - see http://api.jquery.com/category/plugins/templates/ -->
+        <script type="text/html" id="resultsTemplate">
+
+
+            <table class="menu">
+                {{each items}}
+                    <tr>
+                        <td>
+                            <div class="addressAndDistance">
+                                <p class="addAndDist"><a href="${href}">${title}</a></p>
+                                <p class="addAndDist">${distance} metres away</p>
+                            </div>
+                        </td>
+                        <td>{{html vicinity }}</td>
+                    </tr>
+                {{/each}}
+            </table>
+        </script>
+
+
+        <script type="text/html" id="locationTemplate">
+            <p>Searching near: ${lat}, ${lon} {{if addr}}(${addr}){{/if}}</p>
+        </script>
+
+    </head>
+    <body>
+
+        <div id="search">
+            <h1>Direct me to sustenance</h1>
+            <div id="location"></div>
+            <div><p>Actually I am at <input id="address" type="text" length="20"><button id="searchagain">Search again!</button></p></div>
+        </div>
+
+        <div id="results"></div>
+        <div id="placedetails"></div>
+    </body>
+</html>

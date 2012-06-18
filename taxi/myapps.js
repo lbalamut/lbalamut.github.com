@@ -61,12 +61,12 @@ var myApp = {
 
     	placeLink.href = data.view;
     	placeLink.className = 'viewlink';
-        $("taxiname").href = "tel://" +  phoneNr;
+        $("taxiname").href = "tel:" +  phoneNr;
     	placeLink.appendChild(document.createTextNode("view on a map"));
 
         //removeme
         var content = document.createElement("SPAN");
-        content.innerHTML = "tel://" +  phoneNr;
+        content.innerHTML = "tel:" +  phoneNr;
         $("taxiname").appendChild(content);
 
     	document.body.appendChild(placeLink);

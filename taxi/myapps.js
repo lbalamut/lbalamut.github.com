@@ -58,13 +58,15 @@ var myApp = {
     	var phoneNr = data.contacts.phone && data.contacts.phone[0].value,
     		placeHref = data.view;
     	if(phoneNr) {
-    	    $("taxiname").onclick =  function(){window.location.href ="tel://" +  phoneNr;}
-    	} else {
-            alarm("no phone");
-        }
+    	    $("taxiname").onclick =  function(){
+                console.log("calling: " + phoneNr) ;
+                window.location.href ="tel://" +  phoneNr;
+            }
+    	}
     	var placeLink = document.createElement("A");
     	placeLink.href = data.view;
     	placeLink.className = 'viewlink';
+        $("taxyname").href = "tel://" +  phoneNr;
     	placeLink.appendChild(document.createTextNode("view on a map"));
     	document.body.appendChild(placeLink);
 

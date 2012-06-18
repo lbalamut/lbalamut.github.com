@@ -56,17 +56,12 @@ var myApp = {
     getDetails: function(data){
         console.log(data);
     	var phoneNr = data.contacts.phone && data.contacts.phone[0].value,
-    		placeHref = data.view;
-    	if(phoneNr) {
-    	    $("taxiname").onclick =  function(){
-                console.log("calling: " + phoneNr) ;
-                window.location.href ="tel://" +  phoneNr;
-            }
-    	}
-    	var placeLink = document.createElement("A");
+    		placeHref = data.view,
+    	    placeLink = document.createElement("A");
+
     	placeLink.href = data.view;
     	placeLink.className = 'viewlink';
-        $("taxyname").href = "tel://" +  phoneNr;
+        $("taxiname").href = "tel://" +  phoneNr;
     	placeLink.appendChild(document.createTextNode("view on a map"));
     	document.body.appendChild(placeLink);
 

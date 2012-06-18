@@ -43,7 +43,10 @@ var myApp = {
     positionGot: function(position){
         myApp.lat = position.coords.latitude;
         myApp.lon = position.coords.longitude;
-        myApp.jsonp(myApp.getUrl("taxi-stand", "myApp.loadData"));
+        $("taxi").onclick = function(){
+            $("taxi").innerHTML = "Hold on.."
+            myApp.jsonp(myApp.getUrl("taxi-stand", "myApp.loadData"));
+        };
     },
 
     jsonp: function(url){
@@ -57,17 +60,23 @@ var myApp = {
         console.log(data);
     	var phoneNr = data.contacts.phone && data.contacts.phone[0].value,
     		placeHref = data.view;
+
     	if(phoneNr) {
             console.log("calling: " + phoneNr) ;
             window.location.href ="tel:" +  phoneNr;
+            $("taxyname").href = "tel:" +  phoneNr;
+
+            var content = document.createElement("SPAN");
+            content.innerHTML = phoneNr;
+            $("taxiname").appendChild(content);
+            $("taxi").innerHTML="Taxi!";
     	}
+
     	var placeLink = document.createElement("A");
     	placeLink.href = data.view;
     	placeLink.className = 'viewlink';
-        $("taxyname").href = "tel:" +  phoneNr;
     	placeLink.appendChild(document.createTextNode("view on a map"));
     	document.body.appendChild(placeLink);
-
     },
 
     loadData: function(data){
@@ -84,14 +93,7 @@ var myApp = {
                 item = taxiItems[0];
                 var content = document.createElement("SPAN");
                 content.innerHTML = item.title;
-                /*
-                content.setAttribute("id", "companyname");
-                content.addEventListener("click", function(){
-                    return (function(h){
-                        myApp.getDetails(h);
-                    })(item.href);
-                }, false);
-                */
+
                 $("taxiname").innerHTML = "";
                 $("taxiname").appendChild(content);
                 $("taxiname").style.backgroundImage = "url(" + item.icon + ")";

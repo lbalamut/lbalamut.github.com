@@ -31,7 +31,14 @@ var myapp = {
   },
 
   getTaxiInfo: function(searchResult) {
+    if(searchResult.results.items.length){
+      $.getJSON(searchResult.results.items[0].href, myapp.getPhoneAndName)
+    }
+  },
+
+  getPhoneAndName: function(place) {
   }
+
 }
 
 $(document).ready(function(){

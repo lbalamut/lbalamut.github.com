@@ -1,0 +1,9 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""
+" This will let you checkout a tag and see it on vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader=","
+set autoread
+map <Leader>1 :!git co 1<CR><CR>
+map <Leader>2 :!git co 2<CR><CR>
+map <Leader>3 :!git co 3<CR><CR>
+map <Leader>4 :!git co 4<CR><CR>

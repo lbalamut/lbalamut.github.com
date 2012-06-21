@@ -15,7 +15,22 @@ var myapp = {
   appid:"demo_qCG24t50dHOwrLQ",
   appcode: "NYKC67ShPhQwqaydGIW4yg",
 
-  findTaxi: function(position){
+  findTaxi: function(position) {
+    $("#taxi").text("Hold on..")
+    $.getJSON(myapp.search(position, "taxi service"), myapp.getTaxiInfo)
+  }, 
+
+  search: function(position, query) {
+    var lat = position.coords.latitude,
+        lon = position.coords.longitude;
+    return (this.placesServer + 
+            "v1/discover/search?"+ ["app_id="  + this.appid, "app_code=" + this.appcode,
+            "geolocation=geo:" + lat + "," + lon,
+            "q=" + query,
+            "size=25"].join("&"));
+  },
+
+  getTaxiInfo: function(searchResult) {
   }
 }
 

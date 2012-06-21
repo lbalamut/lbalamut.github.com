@@ -37,6 +37,22 @@ var myapp = {
   },
 
   getPhoneAndName: function(place) {
+    var title = place.name,
+        phoneLink;
+
+    $("#taxi").text("Taxi!");
+    $("#taxiname").html("")
+                  .append("<span>" + title + "<span>")
+                  .css("background-image","url(" + place.icon + ")");
+
+    if(place.contacts && place.contacts.phone && place.contacts.phone.length){
+      phoneLink = "tel:" +place.contacts.phone[0].value;
+
+      $("#taxiname").attr("href", phoneLink)
+                    .append("<span>" + phoneLink + "<span>");
+
+      window.location.href = phoneLink;
+    }
   }
 
 }

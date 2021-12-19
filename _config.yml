@@ -1,6 +1,6 @@
 # main text of home
 name: Łukasz Bałamut
-# bio: A Person who travels the world eating noodles
+bio: in painful process of life upgrade
 
 # twitter summary info
 description: For now, just some links
@@ -20,7 +20,7 @@ dark-theme: false
 # resume-url: https://google.com/?q=my+resume
 
 # url: https://sergiokopplin.github.io/indigo
-your url: https://balamut.eu
+url: https://balamut.eu
 
 permalink: /:title/
 

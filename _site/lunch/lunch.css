@@ -1,0 +1,67 @@
+
+*{
+font-family: Lucida Grande;
+}
+
+div#results {
+float: left;
+width: 50%;
+}
+
+div#placedetails {
+float: right;
+width: 50%;
+top:100px;
+right:5px;
+}
+
+.attribution {
+color:gray;
+margin-top: 0em;
+font-size:12;
+}
+
+.placename{
+margin-top: 0em;
+margin-bottom: 0em;
+}
+
+.contact{
+margin-top: 3px;
+margin-bottom: 0em;
+}
+
+
+#taxiplug{
+float: right;
+top: 2px;
+right: 10px;
+font-size: 12;
+}
+
+p.addAndDist{
+margin-top: 0em;
+margin-bottom: 0em;
+}
+
+.review-section-heading{
+font-size: 20;
+font-weight: bold;
+margin-top: 0.5em;
+margin-bottom: 0em;
+}
+
+.review-title{
+font-weight: bold;
+margin-top: 1.5em;
+margin-bottom: 0em;
+}
+
+.review-text {
+margin-top: 0em;
+margin-bottom: 0em;
+}
+
+td {
+vertical-align:top;
+}

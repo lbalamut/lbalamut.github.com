@@ -1,0 +1,275 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Subsurface Webview</title>
+<script>
+//////////////////////////////////
+//advance settings window//
+load_scripts();
+
+function load_script_sync(name)
+{
+	var fileref=document.createElement('script');
+	fileref.setAttribute("type","text/javascript");
+	fileref.async = false;
+	fileref.setAttribute("src", location.pathname + "_files/" + name);
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+function load_scripts()
+{
+	var fileref=document.createElement("link");
+	fileref.setAttribute("rel", "stylesheet");
+	fileref.setAttribute("type", "text/css");
+	fileref.setAttribute("href", location.pathname + "_files/theme.css");
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+
+	fileref=document.createElement("link");
+	fileref.setAttribute("rel", "stylesheet");
+	fileref.setAttribute("type", "text/css");
+	fileref.setAttribute("href", location.pathname + "_files/jquery.jqplot.css");
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+
+	fileref=document.createElement('script');
+	fileref.setAttribute("src", location.pathname + "_files/file.js");
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+
+	fileref=document.createElement('script');
+	fileref.setAttribute("src", location.pathname + "_files/stat.js");
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+
+	fileref=document.createElement('script');
+	fileref.setAttribute("src", location.pathname + "_files/translation.js");
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+
+	fileref=document.createElement('script');
+	fileref.setAttribute("src", location.pathname + "_files/settings.js");
+	document.getElementsByTagName("head")[0].appendChild(fileref);
+
+	load_script_sync("list_lib.js");
+	load_script_sync("jquery.min.js");
+	load_script_sync("jquery.jqplot.min.js");
+	load_script_sync("jqplot.highlighter.min.js");
+	load_script_sync("jqplot.canvasAxisTickRenderer.min.js");
+	load_script_sync("jqplot.canvasTextRenderer.min.js");
+}
+
+var advanced_shown=false;
+function showdiv(){
+	var search = document.getElementById("advanced_search");
+	if(advanced_shown===false){
+		search.style.display='block';
+		advanced_shown=true;
+	}
+	else{
+	search.style.display='none';
+	advanced_shown=false;
+	}
+}
+function hideAdvanced(){
+	if(advanced_shown===false) return;
+	var search = document.getElementById("advanced_search");
+	search.style.display='none';
+	advanced_shown=false;
+}
+
+document.onclick=check;
+function check(e)
+{
+	var target = (e && e.target) || (event && event.srcElement);
+	var obj = document.getElementById('advanced_search');
+	var obj2 = document.getElementById('adv_srch_sp');
+	if(target!=obj && target!=obj2 && target.type!="checkbox"){
+		hideAdvanced();
+	}
+}
+
+////////////////////////////////
+
+function loadSettings(){
+	if(typeof settings === 'undefined')return;
+	document.body.style.fontSize=settings.fontSize;
+	document.body.style.fontFamily=settings.fontFamily;
+}
+
+var searchingModules = new Array();
+
+window.onload=function(){
+
+	//initialize settings
+	loadSettings();
+
+	//initializing default searchers
+	searchingModules["location"] = new SearchModule(true);
+	searchingModules["divemaster"] = new SearchModule(true);
+	searchingModules["buddy"] = new SearchModule(true);
+	searchingModules["notes"] = new SearchModule(true);
+	searchingModules["tags"] = new SearchModule(true);
+
+	getItems();
+
+	//initializing search words
+	for(var i=0;i<items.length;i++){
+		searchingModules["location"].Enter_search_string(items[i].location,i);
+
+		searchingModules["divemaster"].Enter_search_string(items[i].divemaster,i);
+
+		searchingModules["buddy"].Enter_search_string(items[i].buddy,i);
+
+		searchingModules["notes"].Enter_search_string(items[i].notes,i);
+
+		searchingModules["tags"].Enter_search_tag(items[i].tags,i);
+	}
+
+	set_units();
+	sizeofpage=20;
+	showAllDives();
+	document.getElementById("divePanel").style.display='none';
+	document.getElementById("diveStat").style.display='none';
+	if (divestat.length <= 0)
+		document.getElementById("stats_button").style.display='none';
+
+	document.body.style.visibility='visible';
+
+	document.onkeydown = switchDives;
+
+	//translate Page
+	translate_page();
+	getDefaultColor();
+}
+
+var user_search_preference = {
+	location : true,
+	divemaster : true,
+	buddy : true,
+	notes : true,
+	tags : true
+};
+
+function set_search_dropdown(search_preference)
+{
+	console.log(search_preference);
+	searchingModules["location"].enabled = search_preference.location;
+	document.getElementById("search_item_location").checked = search_preference.location;
+
+	searchingModules["divemaster"].enabled = search_preference.divemaster;
+	document.getElementById("search_item_divemaster").checked = search_preference.divemaster;
+
+	searchingModules["buddy"].enabled = search_preference.buddy;
+	document.getElementById("search_item_Buddy").checked = search_preference.buddy;
+
+	searchingModules["notes"].enabled = search_preference.notes;
+	document.getElementById("search_item_Notes").checked = search_preference.notes;
+
+	searchingModules["tags"].enabled = search_preference.tags;
+	document.getElementById("search_item_Tags").checked = search_preference.tags;
+}
+
+function changeAdvSearch(e){
+	// change user searching preference
+	user_search_preference[e.value] = e.checked;
+
+	//set search preference dropdown
+	set_search_dropdown(user_search_preference);
+
+	SearchModules(document.getElementById("search_input").value, null);
+}
+
+</script>
+</head>
+<body>
+	<center>
+	<div id="header_container">
+	<div id="logo"></div>
+	<h1>Subsurface</h1>
+	</div>
+	</center>
+	<div id="diveListPanel">
+	<div id="controlbox">
+		<input id="search_input" oninput="SearchModules(this.value, null)" placeholder="search"/>
+		<a id="adv_srch_sp" onClick="showdiv()" >Advanced search</a>
+		<div id="advanced_search">
+		<input type="checkbox" onchange="changeAdvSearch(this)" id="search_item_location" value="location" checked>Location<br>
+		<input type="checkbox" onchange="changeAdvSearch(this)" id="search_item_divemaster" value="divemaster" checked>Divemaster<br>
+		<input type="checkbox" onchange="changeAdvSearch(this)" id="search_item_Buddy" value="buddy" checked>Buddy<br>
+		<input type="checkbox" onchange="changeAdvSearch(this)" id="search_item_Notes" value="notes" checked>Notes<br>
+		<input type="checkbox" onchange="changeAdvSearch(this)" id="search_item_Tags" value="tags" checked>Tags<br>
+		</div>
+		<div id="toolbox">
+		<select id="no_dives_selector" onChange="setNumberOfDives(this)">
+			<option>10</option>
+			<option>20</option>
+			<option>50</option>
+			<option>100</option>
+		</select>
+		<button id="expnd_all_btn" onClick="expandAll()"> Expand all </button>
+		<button id="claps_all_btn" onClick="collapseAll()"> Collapse all </button>
+		<button id="trip_button" onclick="toggleTrips();">Trips</button>
+		<button id="stats_button" onclick="toggleStats();">Stats</button>
+		</div>
+	</div>
+		<div id="header">
+		<div id="number_header" onClick="change_sort_col('1')" class="item">Number</div>
+		<div id="date_header" onClick="change_sort_col('2')" class="item">Date</div>
+		<div id="time_header" onClick="change_sort_col('3')" class="item">Time</div>
+		<div id="location_header" onClick="change_sort_col('6')" class="item_large">Location</div>
+		<div id="duration_header" onClick="change_sort_col('4')" class="item">Duration</div>
+		<div id="maxdepth_header" onClick="change_sort_col('5')" class="item">Max. Depth</div>
+	</div>
+	<div id="diveslist">
+	</div>
+	<center>
+	<div id="controller">
+		<button onClick="prev_page()">&lt;-</button>
+		<span id="pagging"></span>
+		<button onClick="next_page()">-&gt;</button>
+	</div>
+	</center>
+	</div>
+	<div id="divePanel">
+	<center>
+	<div id="but">
+		<button onClick="prevDetailedDive()">&lt;-</button>
+		<button id="bk_to_ls_lbl" onClick="unshowDiveDetails()">Back to List</button>
+		<button onClick="nextDetailedDive()">-&gt;</button>
+	</div>
+	</center>
+		<div id="diveprofile">
+		<center>
+		<h2 id="dive_no"></h2>
+		<h3 id="dive_location"></h3>
+		</center>
+		<h2 id="div_profil_lbl" class="det_hed">Dive profile</h2>
+		<div style="width:100%" id="chart1"></div>
+		</div>
+		<div id="diveinfo">
+		<h2 class="det_hed">Dive Information</h2>
+		</div>
+		<div id="dive_equipment">
+		<h2 class="det_hed">Dive equipment</h2>
+		</div>
+		<div id="bookmarks">
+		<h2 class="det_hed">Events</h2>
+		</div>
+		<div id="divestats">
+		<h2 class="det_hed">Dive stats</h2>
+		</div>
+		<div id="divephotos">
+		<h2 class="det_hed">Dive photos</h2>
+		<div id="slider_container">
+			<button onclick="prev_photo()" style="width:7%;margin:1%;float:left;">&lt;-</button>
+			<div id="slider">
+			</div>
+			<button onclick="next_photo()" style="width:7%;margin:1%;float:left">-&gt;</button>
+		</div>
+		</div>
+	</div>
+	<div id="diveStat">
+	<center>
+	<button id="bk_to_ls_lbl2" onClick="toggleStats()">Back to list</button>
+	</center>
+		<div id="diveStatsData">
+		</div>
+	</div>
+</body>
+</html>
